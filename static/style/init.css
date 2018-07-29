@@ -1,0 +1,169 @@
+@charset "utf-8";
+body, ul, li, input, h1, h2, h3, h4, p, img, a {
+  margin: 0;
+  padding: 0
+}
+
+body {
+  color: #222;
+  font-family: 'microsoft yahei';
+  background-image: url(../images/body.png)
+}
+
+ul {
+  list-style: none
+}
+
+a {
+  text-decoration: none
+}
+
+input {
+  outline: none
+}
+
+#myCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0
+}
+
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both
+}
+
+.container {
+  margin: auto;
+  width: 12rem;
+  clear: both
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: .18rem;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale
+}
+@font-face {
+  font-family: 'iconfont';  /* project id 544456 */
+  src: url('https://at.alicdn.com/t/font_544456_kfvc2b46y3.eot');
+  src: url('https://at.alicdn.com/t/font_544456_kfvc2b46y3.eot?#iefix') format('embedded-opentype'),
+  url('https://at.alicdn.com/t/font_544456_kfvc2b46y3.woff') format('woff'),
+  url('https://at.alicdn.com/t/font_544456_kfvc2b46y3.ttf') format('truetype'),
+  url('https://at.alicdn.com/t/font_544456_kfvc2b46y3.svg#iconfont') format('svg');
+}
+.snow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7rem;
+  background: url(../images/snow1.png), url(../images/snow2.png);
+  -webkit-animation: snow-wave 10s linear infinite;
+  -moz-animation: snow-wave 10s linear infinite;
+  animation: snow-wave 10s linear infinite;
+  pointer-events: none;
+  z-index: 9999
+}
+
+@-webkit-keyframes snow-wave {
+  0% {
+    background-position: 0 0, 0 0
+  }
+  100% {
+    background-position: 500px 1000px, 1000px 1000px
+  }
+}
+
+@-moz-keyframes snow-wave {
+  0% {
+    background-position: 0 0, 0 0
+  }
+  100% {
+    background-position: 500px 1000px, 1000px 1000px
+  }
+}
+
+@keyframes snow-wave {
+  0% {
+    background-position: 0 0, 0 0
+  }
+  100% {
+    background-position: 500px 1000px, 1000px 1000px
+  }
+}
+
+.wait {
+  margin: auto;
+  position: relative;
+  width: 1rem;
+  height: 1rem
+}
+
+.wait p {
+  position: absolute;
+  left: 0;
+  top: .4rem;
+  width: 100%;
+  color: #aaa;
+  font-size: .14rem;
+  text-align: center
+}
+
+.wait div {
+  width: 100%;
+  height: 100%;
+  animation: wait 1s linear infinite
+}
+
+.wait span {
+  display: block;
+  position: absolute;
+  background-color: #ccc;
+  border-radius: 50%
+}
+
+.wait span:nth-child(1) {
+  top: 0;
+  left: .35rem;
+  width: .15rem;
+  height: .15rem
+}
+
+.wait span:nth-child(2) {
+  top: .1rem;
+  left: .18rem;
+  width: .12rem;
+  height: .12rem
+}
+
+.wait span:nth-child(3) {
+  top: .26rem;
+  left: .08rem;
+  width: .1rem;
+  height: .1rem
+}
+
+.wait span:nth-child(4) {
+  top: .4rem;
+  left: .05rem;
+  width: .08rem;
+  height: .08rem
+}
+
+.wait span:nth-child(5) {
+  top: .53rem;
+  left: .06rem;
+  width: .06rem;
+  height: .06rem
+}
+
+@keyframes wait {
+  100% {
+    transform: rotate(360deg)
+  }
+}
