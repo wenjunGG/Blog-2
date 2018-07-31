@@ -34,6 +34,10 @@
 </template>
 <script>
 import axios from 'axios'
+import common from '../mods/common'
+import crypto from 'crypto'
+import handleSession from '../mods/handleSession'
+import {mapMutations} from 'vuex'
 export default {
   data () {
     return {
@@ -70,6 +74,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      'updateUser'
+    ]),
     focus (str) {
       this.$refs[str].className = 'tips'
       this.$refs[str].innerHTML = this.tips[str]
@@ -84,7 +91,7 @@ export default {
           if (str === 'name') {
             this.$refs[str].className = 'error'
             this.$refs[str].innerHTML = '验证中...'
-            axios.get('/api/users/username', {
+            axios.get('/user/username', {
               params: {
                 user: val
               }
@@ -101,7 +108,7 @@ export default {
                 }
               })
               .catch((error) => {
-                console.log('error', error)
+                console.log(error)
               })
             return
           }
@@ -149,31 +156,41 @@ export default {
         }
       }
       if (flag) {
-        axios.get('/api/users/register', {
-          params: {
-            name: this.$refs.iptname.value,
-            nickname: this.$refs.iptnickname.value,
-            password: this.$refs.iptpass1.value
-          }
+        let md5 = crypto.createHash('md5')
+        let newpass = md5.update(this.$refs.iptpass1.value).digest('hex')
+        let user = this.$refs.iptname.value
+        axios.post('/user/register', {
+          name: user,
+          nickname: this.$refs.iptnickname.value,
+          password: newpass
         })
           .then((response) => {
-            if (response.data) {
+            if (response.data.isOk) {
               this.$refs.result.classList.remove('red')
               this.$refs.result.innerHTML = '注册成功，1秒后跳转首页。'
-              setTimeout(() => {
-                let a = document.createElement('a')
-                a.href = '#/'
-                a.click()
-              }, 1000)
+              handleSession.setSession('user', {user, admin: 0})
+              this.updateUser(user, 0)
+              common.turn('#/', 1000)
             } else {
               this.$refs.result.classList.add('red')
-              this.$refs.result.innerHTML = '服务器被外星人偷走了....请稍后再试'
+              this.$refs.result.innerHTML = response.data.msg
             }
+          })
+          .catch((error) => {
+            console.log(error)
           })
       } else {
         this.$refs.result.classList.add('red')
         this.$refs.result.innerHTML = '请检查输入'
       }
+    }
+  },
+  mounted () {
+    let userInfo = handleSession.getSession('user')
+    if (userInfo) {
+      this.updateUser(userInfo.user, userInfo.admin)
+      alert('您已经登录,不用再注册!')
+      window.history.go(-1)
     }
   }
 }

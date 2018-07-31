@@ -3,19 +3,63 @@
     <bgCanvas></bgCanvas>
     <div class="login">
       <h1>Welcome</h1>
-      <p> <span>账户</span><input class="username" type="text"></p>
-      <p> <span>密码</span><input class="password" type="password"></p>
-      <p><input type="button" class="submit" value="登录"></p>
-      <p class="result">请稍后</p>
+      <p> <span>账户</span><input ref="username" type="text"></p>
+      <p> <span>密码</span><input ref="password" type="password"></p>
+      <p><input type="button" class="submit" value="登录" @click="submit"></p>
+      <div class="result" ref="result"></div>
+      <div class="link"><a href="#/register">注册</a><a href="#/">首页</a></div>
     </div>
   </div>
 </template>
 <script>
 import bgCanvas from '../mods/bgCanvas'
+import axios from 'axios'
+import common from '../mods/common'
+import crypto from 'crypto'
+import handleSession from '../mods/handleSession'
+import {mapMutations} from 'vuex'
 export default {
   name: 'login',
   components: {
     bgCanvas
+  },
+  methods: {
+    ...mapMutations([
+      'updateUser'
+    ]),
+    submit () {
+      this.$refs.result.innerHTML = '请稍后...'
+      let md5 = crypto.createHash('md5')
+      axios.post('/user/login', {
+        name: this.$refs.username.value,
+        password: md5.update(this.$refs.password.value).digest('hex')
+      })
+        .then((response) => {
+          if (response.data.isOk) {
+            this.$refs.result.classList.remove('red')
+            this.$refs.result.innerHTML = response.data.msg
+            let user = response.data.userInfo.username
+            let admin = response.data.userInfo.admin
+            handleSession.setSession('user', {user, admin})
+            this.updateUser(user, admin)
+            common.turn('#/', 1000)
+          } else {
+            this.$refs.result.classList.add('red')
+            this.$refs.result.innerHTML = response.data.msg
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  },
+  mounted () {
+    let userInfo = handleSession.getSession('user')
+    if (userInfo) {
+      this.updateUser(userInfo.user, userInfo.admin)
+      alert('您已经登录!')
+      window.history.go(-1)
+    }
   }
 }
 </script>
@@ -84,5 +128,22 @@ export default {
 }
 .login-wrapper .login p .submit:hover{
   background-color: #8BD4FA;
+}
+.login-wrapper .login .result{
+  height: .25rem;
+  line-height: .25rem;
+  font-size: .14rem;
+  text-align: center;
+  color:green;
+}
+.login-wrapper .login .red{
+  color:red;
+}
+.login-wrapper .login .link {
+  font-size: .12rem;
+  text-align: right;
+}
+.login-wrapper .login .link a{
+  margin-right: .1rem;
 }
 </style>

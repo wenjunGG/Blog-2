@@ -4,13 +4,19 @@
       <div class="container">
         <div class="left">
           <span>lolo~ 欢迎光临！</span>
-          <router-link to="/login"><i class="iconfont">&#xe61b;</i>登录</router-link>
-          <router-link to="/register"><i class="iconfont">&#xe60f;</i>注册</router-link>
+          <span v-if="userInfo.isLogin">
+            <span class="loginout" @click="loginout">退出登录</span>
+          </span>
+          <span v-else>
+            <router-link to="/login"><i class="iconfont">&#xe61b;</i>登录</router-link>
+            <router-link to="/register"><i class="iconfont">&#xe60f;</i>注册</router-link>
+          </span>
         </div>
-        <div class="right">
+        <div class="right" v-show="userInfo.isLogin">
           <img src="../assets/images/icon/female/6.jpg" />
-          <a href="#">水泡泡</a>
+          <a href="#">{{userInfo.user}}</a>
           <a href="#">消息(<span>12</span>)</a>
+          <a href="/admin" v-show="userInfo.admin==1">后台管理</a>
         </div>
       </div>
     </div>
@@ -102,5 +108,40 @@
   </header>
 </template>
 <script>
-export default {}
+import {mapState, mapMutations} from 'vuex'
+import handleSession from './mods/handleSession'
+export default {
+  data () {
+    return {}
+  },
+  computed: {
+    ...mapState([
+      'userInfo'
+    ])
+  },
+  methods: {
+    loginout () {
+      this.clearUser()
+      handleSession.removeSession('user')
+    },
+    ...mapMutations([
+      'updateUser',
+      'clearUser'
+    ])
+  },
+  mounted () {
+    let userInfo = handleSession.getSession('user')
+    if (userInfo) {
+      this.updateUser(userInfo.user, userInfo.admin)
+    }
+  }
+}
 </script>
+<style>
+  .loginout{
+    cursor: pointer;
+  }
+  .loginout:hover{
+    text-underline: #fff;
+  }
+</style>
