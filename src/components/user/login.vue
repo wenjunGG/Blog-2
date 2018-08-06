@@ -38,10 +38,9 @@ export default {
           if (response.data.isOk) {
             this.$refs.result.classList.remove('red')
             this.$refs.result.innerHTML = response.data.msg
-            let user = response.data.userInfo.username
-            let admin = response.data.userInfo.admin
-            handleSession.setSession('user', {user, admin})
-            this.updateUser(user, admin)
+            let {id, username, admin, nickname} = response.data.userInfo
+            handleSession.setSession('user', {id, username, admin, nickname})
+            this.updateUser({id, username, admin, nickname})
             common.turn('#/', 1000)
           } else {
             this.$refs.result.classList.add('red')
@@ -53,10 +52,10 @@ export default {
         })
     }
   },
-  mounted () {
+  created () {
     let userInfo = handleSession.getSession('user')
     if (userInfo) {
-      this.updateUser(userInfo.user, userInfo.admin)
+      this.updateUser(userInfo)
       alert('您已经登录!')
       window.history.go(-1)
     }

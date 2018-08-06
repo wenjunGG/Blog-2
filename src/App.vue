@@ -8,6 +8,7 @@
 <script>
 import vhead from './components/head'
 import common from './components/mods/common.js'
+import {mapMutations} from 'vuex'
 export default {
   name: 'App',
   data () {
@@ -16,6 +17,18 @@ export default {
   },
   components: {
     vhead
+  },
+  methods: {
+    ...mapMutations([
+      'setClassify',
+      'setStatus',
+      'setLabels'
+    ])
+  },
+  created () {
+    this.setClassify()
+    this.setStatus()
+    this.setLabels()
   },
   mounted () {
     let ev = 'orientationchange' in window ? 'orientationchange' : 'resize'

@@ -14,7 +14,7 @@
         </div>
         <div class="right" v-show="userInfo.isLogin">
           <img src="../assets/images/icon/female/6.jpg" />
-          <a href="#">{{userInfo.user}}</a>
+          <a href="#">{{userInfo.nickname}}</a>
           <a href="#">消息(<span>12</span>)</a>
           <a href="/admin" v-show="userInfo.admin==1">后台管理</a>
         </div>
@@ -41,62 +41,66 @@
         </div>
         <div class="right">
           <ul>
-            <li class="active">
-              <a href="#">
-                <span>首页</span>
-                <span>首页</span>
-              </a>
-              <audio src="../assets/video/do.mp3"></audio>
-              <p class="footP do">dsda</p>
+            <li v-for="(item,index) in data" :key="index">
+              <router-link :to="`/articlelist/1_${item.id}.html`">
+                <span>{{item.name}}</span>
+                <span>{{item.name}}</span>
+              </router-link>
+              <p class="footP" :class="footP[index]"></p>
+              <div class="secondnav">
+                <p v-for="(itm,i) in item.child" :key="i">
+                  <router-link :to="`/articlelist/2_${itm.id}.html`"></router-link>
+                </p>
+              </div>
             </li>
-            <li>
-              <a href="#">
-                <span>知识总结</span>
-                <span>知识总结</span>
-              </a>
-              <audio src="../assets/video/re.mp3"></audio>
-              <p class="footP re"></p>
-            </li>
-            <li>
-              <a href="#">
-                <span>案例分享</span>
-                <span>案例分享</span>
-              </a>
-              <audio src="../assets/video/mi.mp3"></audio>
-              <p class="footP mi"></p>
-            </li>
-            <li>
-              <a href="#">
-                <span>作品展示</span>
-                <span>作品展示</span>
-              </a>
-              <audio src="../assets/video/fa.mp3"></audio>
-              <p class="footP fa"></p>
-            </li>
-            <li>
-              <a href="#">
-                <span>随笔</span>
-                <span>随笔</span>
-              </a>
-              <audio src="../assets/video/sol.mp3"></audio>
-              <p class="footP sol"></p>
-            </li>
-            <li>
-              <a href="#">
-                <span>留言板</span>
-                <span>留言板</span>
-              </a>
-              <audio src="../assets/video/la.mp3"></audio>
-              <p class="footP la"></p>
-            </li>
-            <li>
-              <a href="#">
-                <span>关于博客</span>
-                <span>关于博客</span>
-              </a>
-              <audio src="../assets/video/si.mp3"></audio>
-              <p class="footP si"></p>
-            </li>
+            <!--<li>-->
+              <!--<a href="#">-->
+                <!--<span>知识总结</span>-->
+                <!--<span>知识总结</span>-->
+              <!--</a>-->
+              <!--<audio src="../assets/video/re.mp3"></audio>-->
+              <!--<p class="footP re"></p>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<a href="#">-->
+                <!--<span>案例分享</span>-->
+                <!--<span>案例分享</span>-->
+              <!--</a>-->
+              <!--<audio src="../assets/video/mi.mp3"></audio>-->
+              <!--<p class="footP mi"></p>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<a href="#">-->
+                <!--<span>作品展示</span>-->
+                <!--<span>作品展示</span>-->
+              <!--</a>-->
+              <!--<audio src="../assets/video/fa.mp3"></audio>-->
+              <!--<p class="footP fa"></p>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<a href="#">-->
+                <!--<span>随笔</span>-->
+                <!--<span>随笔</span>-->
+              <!--</a>-->
+              <!--<audio src="../assets/video/sol.mp3"></audio>-->
+              <!--<p class="footP sol"></p>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<a href="#">-->
+                <!--<span>留言板</span>-->
+                <!--<span>留言板</span>-->
+              <!--</a>-->
+              <!--<audio src="../assets/video/la.mp3"></audio>-->
+              <!--<p class="footP la"></p>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<a href="#">-->
+                <!--<span>关于博客</span>-->
+                <!--<span>关于博客</span>-->
+              <!--</a>-->
+              <!--<audio src="../assets/video/si.mp3"></audio>-->
+              <!--<p class="footP si"></p>-->
+            <!--</li>-->
             <li class="music">
               <span class="note"></span><span class="note"></span>
               <span class="note"></span><span class="note"></span>
@@ -111,13 +115,31 @@
 import {mapState, mapMutations} from 'vuex'
 import handleSession from './mods/handleSession'
 export default {
+  name: 'head',
   data () {
-    return {}
+    return {
+      footP: ['do', 're', 'mi', 'fa', 'sol', 'la', 'si']
+    }
   },
   computed: {
     ...mapState([
-      'userInfo'
-    ])
+      'userInfo',
+      'classify'
+    ]),
+    classData () {
+      let data = this.classify.filter((item) => {
+        return item.level === 1
+      })
+      data.forEach((item) => {
+        item.child = this.classify.filter((item2) => {
+          return item2.preid === item.id
+        })
+      })
+      data.sort((a, b) => {
+        return a.idx - b.idx
+      })
+      return data
+    }
   },
   methods: {
     loginout () {
@@ -129,10 +151,10 @@ export default {
       'clearUser'
     ])
   },
-  mounted () {
-    let userInfo = handleSession.getSession('user')
-    if (userInfo) {
-      this.updateUser(userInfo.user, userInfo.admin)
+  created () {
+    let uInfo = handleSession.getSession('user')
+    if (uInfo) {
+      this.updateUser(uInfo)
     }
   }
 }

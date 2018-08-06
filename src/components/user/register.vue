@@ -39,6 +39,7 @@ import crypto from 'crypto'
 import handleSession from '../mods/handleSession'
 import {mapMutations} from 'vuex'
 export default {
+  name: 'register',
   data () {
     return {
       regx: {
@@ -158,19 +159,20 @@ export default {
       if (flag) {
         let md5 = crypto.createHash('md5')
         let newpass = md5.update(this.$refs.iptpass1.value).digest('hex')
-        let user = this.$refs.iptname.value
+        let username = this.$refs.iptname.value
+        let nickname = this.$refs.iptnickname.value
         axios.post('/user/register', {
-          name: user,
-          nickname: this.$refs.iptnickname.value,
+          name: username,
+          nickname: nickname,
           password: newpass
         })
           .then((response) => {
             if (response.data.isOk) {
               this.$refs.result.classList.remove('red')
-              this.$refs.result.innerHTML = '注册成功，1秒后跳转首页。'
-              handleSession.setSession('user', {user, admin: 0})
-              this.updateUser(user, 0)
-              common.turn('#/', 1000)
+              this.$refs.result.innerHTML = '注册成功，请登录。'
+              // handleSession.setSession('user', {username, admin: 0, nickname})
+              // this.updateUser({username, admin: 0, nickname})
+              common.turn('#/login', 1000)
             } else {
               this.$refs.result.classList.add('red')
               this.$refs.result.innerHTML = response.data.msg
@@ -185,10 +187,10 @@ export default {
       }
     }
   },
-  mounted () {
+  created () {
     let userInfo = handleSession.getSession('user')
     if (userInfo) {
-      this.updateUser(userInfo.user, userInfo.admin)
+      this.updateUser(userInfo)
       alert('您已经登录,不用再注册!')
       window.history.go(-1)
     }

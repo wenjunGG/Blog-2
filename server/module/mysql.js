@@ -23,7 +23,11 @@ module.exports = function (sqlstr,value,callback) {
       db.connect(handleError);
       db.on('error',handleError)
   }
+  try{
   connect();
   db.query(sqlstr,value,callback);
+  }catch (err) {
+    throw err;
+  }
   db.end();
 }
