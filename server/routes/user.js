@@ -20,8 +20,8 @@ router.post('/register', (req, res, next) =>{
     if(err) throw err;
     if(data && data.length===0){
       time = new Date().toLocaleString();
-      sql('INSERT INTO `usertb` (`id`, `username`, `password`, `admin`, `photo`, `nickname`, `sex`, `regtime`, `activeness`) VALUES (NULL, ?, ?, 0, 0, ?, 0, ?, 0)',[user,pass,nickname,time],(err,data)=>{
-        if(err){
+      sql('INSERT INTO `usertb` (`id`, `username`, `password`, `admin`, `photo`, `nickname`, `sex`, `regtime`, `activeness`) VALUES (NULL, ?, ?, 0, 0, ?, 0, ?, 0)',[user,pass,nickname,time],(er,dt)=>{
+        if(er){
           res.send({msg:'服务器被外星人偷走了....请稍后再试',isOk:false});
           return;
         }

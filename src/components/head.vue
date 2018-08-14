@@ -41,66 +41,18 @@
         </div>
         <div class="right">
           <ul>
-            <li v-for="(item,index) in data" :key="index">
-              <router-link :to="`/articlelist/1_${item.id}.html`">
+            <li v-for="(item,index) in classData" :key="index">
+              <router-link :to="`${item.url}/${item.id}`">
                 <span>{{item.name}}</span>
                 <span>{{item.name}}</span>
               </router-link>
               <p class="footP" :class="footP[index]"></p>
-              <div class="secondnav">
-                <p v-for="(itm,i) in item.child" :key="i">
-                  <router-link :to="`/articlelist/2_${itm.id}.html`"></router-link>
-                </p>
-              </div>
+              <div class="secondnav" v-if="item.child.length>0">
+                  <p v-for="(itm,i) in item.child" :key="i">
+                    <router-link :to="`${item.url}/${item.id}/${itm.id}.html`">{{itm.name}}</router-link>
+                  </p>
+                </div>
             </li>
-            <!--<li>-->
-              <!--<a href="#">-->
-                <!--<span>知识总结</span>-->
-                <!--<span>知识总结</span>-->
-              <!--</a>-->
-              <!--<audio src="../assets/video/re.mp3"></audio>-->
-              <!--<p class="footP re"></p>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<a href="#">-->
-                <!--<span>案例分享</span>-->
-                <!--<span>案例分享</span>-->
-              <!--</a>-->
-              <!--<audio src="../assets/video/mi.mp3"></audio>-->
-              <!--<p class="footP mi"></p>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<a href="#">-->
-                <!--<span>作品展示</span>-->
-                <!--<span>作品展示</span>-->
-              <!--</a>-->
-              <!--<audio src="../assets/video/fa.mp3"></audio>-->
-              <!--<p class="footP fa"></p>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<a href="#">-->
-                <!--<span>随笔</span>-->
-                <!--<span>随笔</span>-->
-              <!--</a>-->
-              <!--<audio src="../assets/video/sol.mp3"></audio>-->
-              <!--<p class="footP sol"></p>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<a href="#">-->
-                <!--<span>留言板</span>-->
-                <!--<span>留言板</span>-->
-              <!--</a>-->
-              <!--<audio src="../assets/video/la.mp3"></audio>-->
-              <!--<p class="footP la"></p>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<a href="#">-->
-                <!--<span>关于博客</span>-->
-                <!--<span>关于博客</span>-->
-              <!--</a>-->
-              <!--<audio src="../assets/video/si.mp3"></audio>-->
-              <!--<p class="footP si"></p>-->
-            <!--</li>-->
             <li class="music">
               <span class="note"></span><span class="note"></span>
               <span class="note"></span><span class="note"></span>

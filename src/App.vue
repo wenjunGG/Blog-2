@@ -2,13 +2,17 @@
   <div id="app">
     <vhead></vhead>
     <router-view/>
+    <footer>
+      <p>lolowu~专注前端开发，关注前沿技术！</p>
+      <p>蜀ICP备18001040号</p>
+    </footer>
   </div>
 </template>
 
 <script>
 import vhead from './components/head'
 import common from './components/mods/common.js'
-import {mapMutations} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 export default {
   name: 'App',
   data () {
@@ -23,6 +27,11 @@ export default {
       'setClassify',
       'setStatus',
       'setLabels'
+    ])
+  },
+  computed: {
+    ...mapState([
+      'classify'
     ])
   },
   created () {

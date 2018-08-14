@@ -30,8 +30,8 @@ export default {
     getUEContent () { // 获取内容方法
       return this.editor.getContent()
     },
-    getUEHtml () {
-      return this.editor.getAllHtml()
+    getUEContentTxt () {
+      return this.editor.getContentTxt()
     }
   },
   destroyed () {

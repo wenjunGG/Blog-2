@@ -148,7 +148,8 @@ header nav .right ul li {
   position: relative;
   padding: 0 .08rem;
   line-height: .4rem;
-  cursor: pointer
+  cursor: pointer;
+  overflow: hidden;
 }
 
 header nav .right ul li> a {
@@ -157,25 +158,25 @@ header nav .right ul li> a {
   color: #222;
   height: .4rem;
   font-size: .16rem;
-  z-index: 5
+  z-index: 5;
 }
 
 header nav .right ul li> a span {
   display: block;
   float: left;
-  transition: transform .5s
+  transition: transform .5s;
 }
 
 header nav .right ul li> a span:nth-child(1) {
   position: relative;
-  transform: rotateX(-90deg) translateY(-0.2rem)
+  transform: rotateX(-90deg) translateY(-0.2rem);
 }
 
 header nav .right ul li> a span:nth-child(2) {
   position: absolute;
   top: 0;
   left: 0;
-  width: .8rem
+  width: .8rem;
 }
 
 header nav .right ul li .footP {
@@ -185,35 +186,35 @@ header nav .right ul li .footP {
   height: .02rem;
   width: 100%;
   transition: height .5s;
-  z-index: 2
+  z-index: 2;
 }
 
 header nav .right ul li .do {
-  background-color: #ccde6c
+  background-color: #ccde6c;
 }
 
 header nav .right ul li .re {
-  background-color: #d1eef6
+  background-color: #d1eef6;
 }
 
 header nav .right ul li .mi {
-  background-color: #f6d8d1
+  background-color: #f6d8d1;
 }
 
 header nav .right ul li .fa {
-  background-color: #97cef3
+  background-color: #97cef3;
 }
 
 header nav .right ul li .sol {
-  background-color: #fbc58e
+  background-color: #fbc58e;
 }
 
 header nav .right ul li .la {
-  background-color: #d7b3fb
+  background-color: #d7b3fb;
 }
 
 header nav .right ul li .si {
-  background-color: #efb6bd
+  background-color: #efb6bd;
 }
 
 header nav .right ul li > span {
@@ -222,15 +223,15 @@ header nav .right ul li > span {
   bottom: 0;
   width: .02rem;
   height: .16rem;
-  background-color: #666
+  background-color: #666;
 }
 
 header nav .right ul li > span:nth-child(1) {
-  left: .08rem
+  left: .08rem;
 }
 
 header nav .right ul li > span:nth-child(2) {
-  left: .16rem
+  left: .16rem;
 }
 
 header nav .right ul li > span:nth-child(3) {
@@ -268,22 +269,47 @@ header nav .right ul li.active > span:nth-child(2n-1) {
 header nav .right ul li.active > span:nth-child(2n) {
   transform: rotate(-28deg)
 }
+header nav .right ul li:hover .secondnav {
+  opacity: 1;
+  transform:translateY(0);
+  z-index: 2;
+}
+header nav .right ul li:hover{
+  overflow: visible;
+}
 header nav .right ul li .secondnav{
-  /*display:none;*/
   position: absolute;
   left: 0;
-  top: 0.4rem;
+  top: 0.6rem;
+  width: 100%;
   background-color: #fff;
+  border: 1px solid #ddd;
+  transition:opacity 1s, transform .5s;
+  opacity: 0;
+  transform:translateY(.3rem);
+  z-index: -2;
+}
+header nav .right ul li .secondnav:before{
+  content:'';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: .05rem;
+  width: 100%;
+  background-color: #61B3E6;
 }
 header nav .right ul li .secondnav p{
   line-height: .3rem;
   text-align: center;
-  font-size: .14rem;
-  border-bottom: 1px solid #ddd ;
+  font-size: .12rem;
+  border-top: 1px solid #ddd ;
   cursor: pointer;
 }
 header nav .right ul li .secondnav p:hover{
   background-color: #ddd;
+}
+header nav .right ul li .secondnav p a{
+  color:#222;
 }
 header nav .right ul li.music {
   width: .2rem;
@@ -370,7 +396,7 @@ header .navScol li:hover .footP {
   width: 3.45rem
 }
 
-.content .column article {
+.content .column article, .blog-about article{
   margin-bottom: .1rem;
   padding: .15rem .2rem .07rem;
   background-color: rgba(255, 255, 255, 0.8);
@@ -380,7 +406,7 @@ header .navScol li:hover .footP {
   font-size: .16rem
 }
 
-.content .column article h1 {
+.content .column article h1, .blog-about article h1 {
   height: .3rem;
   line-height: .3rem;
   font-size: .18rem;
@@ -388,12 +414,12 @@ header .navScol li:hover .footP {
   border-bottom: .01rem solid #61b3e6
 }
 
-.content .column article h1 i {
+.content .column article h1 i{
   margin-right: .05rem;
   color: #ff337d
 }
 
-.content .column article h1 span {
+.content .column article h1 span{
   float: right;
   color: #ff86b4;
   font-size: .12rem;
@@ -469,14 +495,24 @@ header .navScol li:hover .footP {
 .content .column article ul li:nth-child(3) i:nth-child(1) {
   background-color: #61b3e6
 }
-
-.content .column article.search h1 {
+.blog-about{
+  float: right;
+  width: 5.5rem;
+  height:4rem;
+  box-shadow: 0 0 .02rem #ccc;
+  background: url('../images/bgimg.jpg') 0/cover no-repeat;
+}
+.blog-about >article  {
+  box-shadow: none;
+  background: none;
+}
+.blog-about article.search h1 {
   color: #61b3e6;
   border: none
 }
 
-.content .column article.search input {
-  width: 2.5rem;
+.blog-about article.search input {
+  width: 4.4rem;
   height: .3rem;
   line-height: .3rem;
   padding-left: .1rem;
@@ -486,7 +522,7 @@ header .navScol li:hover .footP {
   vertical-align: middle
 }
 
-.content .column article.search i {
+.blog-about article.search i {
   display: inline-block;
   width: .4rem;
   height: .3rem;
@@ -498,12 +534,11 @@ header .navScol li:hover .footP {
   vertical-align: middle;
   cursor: pointer
 }
-
-.content .column article.about {
+.blog-about article.about {
   padding-top: 0
 }
 
-.content .column article.about h1 {
+.blog-about article.about h1 {
   width: 1.2rem;
   background-color: #ff337d;
   border: none;
@@ -511,26 +546,26 @@ header .navScol li:hover .footP {
   text-align: center
 }
 
-.content .column article.about h1 i {
+.blog-about article.about h1 i {
   font-weight: lighter
 }
 
-.content .column article.about img {
+.blog-about article.about img {
   width: 3rem;
   height: 2rem
 }
 
-.content .column article.about p {
+.blog-about article.about p {
   line-height: .25rem;
   font-size: .14rem;
   text-indent: .2rem
 }
 
-.content .column article.about p a {
+.blog-about article.about p a {
   color: #6cbae8
 }
 
-.content .column article.about p a:hover {
+.blog-about article.about p a:hover {
   text-decoration: underline
 }
 

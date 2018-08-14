@@ -309,7 +309,7 @@
         }
     };
     uParse = function(selector,opt){
-        utils.domReady(function(){
+      utils.domReady(function(){
             var contents;
             if(document.querySelectorAll){
                 contents = document.querySelectorAll(selector)
@@ -340,8 +340,8 @@ UE.parse.register('insertcode',function(utils){
         if(typeof XRegExp == "undefined"){
             var jsurl,cssurl;
             if(this.rootPath !== undefined){
-                jsurl = utils.removeLastbs(this.rootPath)  + '/third-party/SyntaxHighlighter/shCore.js';
-                cssurl = utils.removeLastbs(this.rootPath) + '/third-party/SyntaxHighlighter/shCoreDefault.css';
+              jsurl = utils.removeLastbs(this.rootPath)  + '/third-party/SyntaxHighlighter/shCore.js';
+              cssurl = utils.removeLastbs(this.rootPath) + '/third-party/SyntaxHighlighter/shCoreDefault.css';
             }else{
                 jsurl = this.highlightJsUrl;
                 cssurl = this.highlightCssUrl;

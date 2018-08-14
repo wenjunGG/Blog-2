@@ -79,6 +79,7 @@ export default {
         label_id: 1,
         imgurl: '/image/articleLogo/1.jpg',
         content: '',
+        contentTxt: '',
         author_id: 0,
         author_nkname: '',
         regtime: '',
@@ -105,6 +106,7 @@ export default {
   methods:{
     submit () {
       this.articleData.content = this.$refs.ue.getUEContent()
+      this.articleData.contentTxt = this.$refs.ue.getUEContentTxt().slice(0,200)
       let cl = this.$refs.classSelect
       this.articleData.classify_first_id = cl.firstSelect
       this.articleData.classify_second_id = cl.secondSelect

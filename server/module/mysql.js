@@ -24,10 +24,10 @@ module.exports = function (sqlstr,value,callback) {
       db.on('error',handleError)
   }
   try{
-  connect();
-  db.query(sqlstr,value,callback);
+    connect();
+    db.query(sqlstr,value,callback);
   }catch (err) {
-    throw err;
+    console.log(err);
   }
   db.end();
 }

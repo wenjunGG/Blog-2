@@ -72,12 +72,8 @@
   margin-left: .1rem
 }
 
-.content .main article section .info ul li a {
+.content .main article section .info ul li:nth-child(4) span {
   color: #61b3e6
-}
-
-.content .main article section .info ul li a:hover {
-  text-decoration: underline
 }
 
 .content .main article section .info ul li i {

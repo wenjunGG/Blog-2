@@ -11,5 +11,9 @@ export default {
       a.href = str
       a.click()
     }, time)
+  },
+  getTime (time) {
+    let newtime = new Date(time)
+    return `${newtime.getFullYear()}-${newtime.getMonth() + 1}-${newtime.getDate()} ${newtime.getHours()}:${newtime.getMinutes()}:${newtime.getSeconds()}`
   }
 }
