@@ -43,7 +43,7 @@ import axios from 'axios'
 import {mapGetters} from 'vuex'
 export default {
   name: 'listComponent',
-  props: ['type', 'para', 'id', 'preid'],
+  props: ['type', 'para', 'cid'],
   data () {
     return {
       listData: [],
@@ -86,8 +86,7 @@ export default {
       axios.get('api/article', {
         type: this.type,
         para: this.para,
-        id: this.id,
-        preid: this.preid,
+        cid: this.cid,
         start: this.start,
         count: this.count
       }).then((res) => {

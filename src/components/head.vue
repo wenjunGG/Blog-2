@@ -41,17 +41,17 @@
         </div>
         <div class="right">
           <ul>
-            <li v-for="(item,index) in classData" :key="index">
-              <router-link :to="`${item.url}/${item.id}`">
+            <li v-for="(item,index) in classData" :key="index" @click="acitve(index)" ref="navLi">
+              <router-link :to="`${item.url}?para=${item.id}`">
                 <span>{{item.name}}</span>
                 <span>{{item.name}}</span>
               </router-link>
               <p class="footP" :class="footP[index]"></p>
               <div class="secondnav" v-if="item.child.length>0">
                   <p v-for="(itm,i) in item.child" :key="i">
-                    <router-link :to="`${item.url}/${item.id}/${itm.id}.html`">{{itm.name}}</router-link>
+                    <router-link :to="`${item.url}/${itm.id}.html?para=${item.id}`">{{itm.name}}</router-link>
                   </p>
-                </div>
+              </div>
             </li>
             <li class="music">
               <span class="note"></span><span class="note"></span>
@@ -70,7 +70,8 @@ export default {
   name: 'head',
   data () {
     return {
-      footP: ['do', 're', 'mi', 'fa', 'sol', 'la', 'si']
+      footP: ['do', 're', 'mi', 'fa', 'sol', 'la', 'si'],
+      lastLi: 0
     }
   },
   computed: {
@@ -97,6 +98,11 @@ export default {
     loginout () {
       this.clearUser()
       handleSession.removeSession('user')
+    },
+    acitve (index) {
+      this.$refs.navLi[index].classList.add('on')
+      this.$refs.navLi[this.lastLi].classList.remove('on')
+      this.lastLi = index
     },
     ...mapMutations([
       'updateUser',

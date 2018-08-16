@@ -49,6 +49,10 @@ input {
 .mb20{
   margin-bottom: .2rem;
 }
+.initDiv{
+  padding: 0 !important;
+  margin: 0 !important;
+}
 .iconfont {
   font-family: "iconfont" !important;
   font-size: .18rem;

@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <vhead></vhead>
+    <keep-alive>
     <router-view/>
+    </keep-alive>
     <footer>
       <p>lolowu~专注前端开发，关注前沿技术！</p>
       <p>蜀ICP备18001040号</p>

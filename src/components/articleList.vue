@@ -1,6 +1,6 @@
 <template>
   <section class="content container mt20">
-    <listCom :type="type" :para="para" :id="id" :preid="preid"></listCom>
+    <listCom :type="type" :para="para" :cid="cid"></listCom>
     <column></column>
   </section>
 </template>
@@ -10,9 +10,8 @@ export default {
   data () {
     return {
       type: this.$route.params.type,
-      preid: this.$route.params.preid,
-      sedid: this.$route.params.id,
-      para: ''
+      cid: this.$route.params.cid,
+      para: this.$route.query.para
     }
   }
 }

@@ -31,7 +31,7 @@ export default {
   name: 'articleShow',
   data () {
     return {
-      id: this.$route.params.id,
+      id: this.$route.params.artid,
       artData: {},
       isOn: false,
       colletMsg: '点击收藏',
@@ -104,7 +104,7 @@ export default {
         if (res.data.isOk) {
           this.$refs.comment.getData()
         } else {
-          alert('你的回复被外星人劫走了，请他日再试。')
+          alert('你的回复被外星人劫走了，请稍后再试。')
         }
       }).catch((err) => {
         console.log(err)
@@ -112,51 +112,62 @@ export default {
     },
     getTime (time) {
       return common.getTime(time)
-    }
-  },
-  created () {
-    axios.get('/api/article', {
-      type: 'id',
-      id: this.id
-    }).then((res) => {
-      if (res.data.isOk) {
-        this.artData = res.data.result[0]
-      } else {
-        alert('你访问的链接不存在')
-        window.history.go(-1)
-      }
-    }).catch((err) => {
-      console.log(err)
-    })
-    axios.get('/api/comment', {
-      type: 'count',
-      id: this.id
-    }).then((res) => {
-      if (res.data.isOk) {
-        this.commentCount = res.data.result
-      }
-    }).catch((err) => {
-      console.log(err)
-    })
-    if (this.userInfo.isLogin) {
-      axios.post('/api/collet', {
-        type: 'select',
-        data: {
-          userId: this.userInfo.id,
-          artId: this.artData.id
+    },
+    initData () {
+      axios.get('/api/article', {
+        params: {
+          type: 'id',
+          id: this.id
         }
       }).then((res) => {
         if (res.data.isOk) {
-          this.colletMsg = '取消收藏'
-          this.isOn = true
+          this.artData = res.data.result[0]
+          setTimeout(this.uparse, 200)
         }
+      }).catch((err) => {
+        console.log(err)
+      })
+      axios.get('/api/comment', {
+        type: 'count',
+        id: this.id
+      }).then((res) => {
+        if (res.data.isOk) {
+          this.commentCount = res.data.result
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+      if (this.userInfo.isLogin) {
+        axios.post('/api/collet', {
+          type: 'select',
+          data: {
+            userId: this.userInfo.id,
+            artId: this.artData.id
+          }
+        }).then((res) => {
+          if (res.data.isOk) {
+            this.colletMsg = '取消收藏'
+            this.isOn = true
+          }
+        })
+      }
+    },
+    uparse () {
+      window.uParse('#contentTxt', {
+        rootPath: '../../static/ueditor'
       })
     }
   },
-  mounted () {
-    window.uParse('#contentTxt', {
-      rootPath: '../../static/ueditor'
-    })
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'articleShow') {
+        this.id = to.params.artid
+        this.initData()
+      }
+    }
+  },
+  created () {
+    this.initData()
   }
 }
 </script>

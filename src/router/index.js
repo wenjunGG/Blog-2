@@ -5,6 +5,7 @@ import index from '@/components/index'
 import register from '@/components/user/register'
 import articleList from '@/components/articleList'
 import articleShow from '@/components/articleShow'
+import works from '@/components/works'
 
 Vue.use(Router)
 
@@ -26,14 +27,24 @@ export default new Router({
       component: register
     },
     {
-      path: '/articlelist/:type/:preid/:id.html',
+      path: '/articlelist/:type/:cid.html',
       name: 'articlelist',
       component: articleList
     },
     {
-      path: '/article_:id.html',
+      path: '/articlelist/:type',
+      name: 'articlelist',
+      component: articleList
+    },
+    {
+      path: '/article_:artid.html',
       name: 'articleShow',
       component: articleShow
+    },
+    {
+      path: '/works/:preid/:secid.html',
+      name: 'works',
+      component: works
     }
   ]
 })

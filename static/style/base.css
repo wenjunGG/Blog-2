@@ -149,7 +149,6 @@ header nav .right ul li {
   padding: 0 .08rem;
   line-height: .4rem;
   cursor: pointer;
-  overflow: hidden;
 }
 
 header nav .right ul li> a {
@@ -250,7 +249,7 @@ header nav .right ul li:hover a span:nth-child(2) {
   transform: rotateX(90deg) translateY(.2rem)
 }
 
-header nav .right ul li:hover .footP {
+header nav .right ul li:hover .footP,header nav .right ul li.on .footP {
   height: .7rem
 }
 
@@ -272,22 +271,19 @@ header nav .right ul li.active > span:nth-child(2n) {
 header nav .right ul li:hover .secondnav {
   opacity: 1;
   transform:translateY(0);
-  z-index: 2;
-}
-header nav .right ul li:hover{
-  overflow: visible;
+  height:auto;
 }
 header nav .right ul li .secondnav{
   position: absolute;
   left: 0;
   top: 0.6rem;
   width: 100%;
+  height:0;
   background-color: #fff;
   border: 1px solid #ddd;
   transition:opacity 1s, transform .5s;
   opacity: 0;
   transform:translateY(.3rem);
-  z-index: -2;
 }
 header nav .right ul li .secondnav:before{
   content:'';

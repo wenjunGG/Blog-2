@@ -1,6 +1,7 @@
 const express = require('express'),
   router = express.Router(),
   sql = require('../module/mysql');
+  async = require('async')
 
 router.get('/userData', (req,res)=>{
   let sqlstr = 'select * from usertb';
@@ -153,38 +154,66 @@ router.post('/labels',(req,res)=>{
 });
 
 router.get('/article',(req,res) =>{
+  let type = req.query.type,
+      para = req.query.para,
+      cid = req.query.cid,
+      start = req.query.start,
+      count = req.query.count;
   let sqlstr = 'select * from article_tb';
   let value = [];
-  switch (req.params.type){
+  switch (type){
     case 'all':
-      sqlstr += 'order by id desc';
+      sqlstr += ' order by id desc';
       break;
     case 'id':
-      sqlstr += 'where id = '+ req.params.id;
+      sqlstr += ' where id = ?';
+      value = [req.query.id];
       break;
     case 'regtime':
-      sqlstr += 'order by regtime desc';
+      sqlstr += ' order by regtime desc';
       break;
     case 'readcount':
-      sqlstr += 'order by rendcount desc';
+      sqlstr += ' order by rendcount desc';
       break;
     case 'favorite':
-      sqlstr += 'order by favorite desc';
+      sqlstr += ' order by favorite desc';
       break;
     default:
-      if(req.params.preid){
-        sqlstr += 'where classify_first_id = ?';
-        value = [req.params.preid]
-        if(req.params.sedid){
-          sqlstr += ' and classify_second_id = ?';
-          value.push(req.params.sedid)
-        }
+      if(type && para){
+        async.waterfall([function (next){
+          sql('select * from classify_tb where id = ?',[para],(err,data)=>{
+            if(err) throw err;
+            let regx = new RegExp(type);
+            if(data && data.length > 0 && regx.test(data[0].url)){
+              next(null,data)
+            }else{
+              res.status(404).render('404');
+            }
+        })
+        },
+        function (nextdata,next) {
+          if(cid){
+            sql('select preid from classify_tb where id = ?',[cid],(err,data)=>{
+              if(err) throw err;
+              if(data && data == para){
+                next(null,2);
+              }else{
+                res.status(404).render('404');
+              }
+            })
+          }else{
+            next(null,1);
+          }
+        }],
+        function (err,nextdata){
+          sqlstr = 'select * from article_tb where ';
+          sqlstr += nextdata === 1 ? ('classify_first_id = '+ para) : ('classify_second_id = '+cid);
+          value = []
+        })
       }
       break;
   }
-  if(req.body.start){
-    sqlstr += `limit ${req.body.start},${req.body.count}`;
-  }
+  if(start) sqlstr += ` limit ${start},${count}`;
   sql(sqlstr,value,(err,data) => {
     if(err) throw err;
     if(data && data.length>0){
@@ -215,9 +244,9 @@ router.post('/articleEdit',(req,res)=>{
     case 'insert':
       sqlstr = `INSERT INTO article_tb ( id, classify_first_id, classify_second_id, title,
        label_id,imgurl, content, contentTxt, author_id, author_nkname, regtime, updatetime, readcount, 
-       favorite, url, status_id) VALUES (1,?,?,?,?,?,?,?,?,?,?,0,0,?,?)`;
+       favorite, url, status_id) VALUES (0,?,?,?,?,?,?,?,?,?,?,?,0,0,?,?)`;
       value = [data.classify_first_id,data.classify_second_id,data.title,data.label_id,data.imgurl,
-        data.content,data.author_id,data.author_nkname,datetime,datetime,data.url,data.status_id];
+        data.content,data.contentTxt,data.author_id,data.author_nkname,datetime,datetime,data.url,data.status_id];
       break;
     case 'delete':
       sqlstr = 'delete from article_tb where id = ?';
@@ -226,7 +255,7 @@ router.post('/articleEdit',(req,res)=>{
     default:
       break;
   }
-  sql(sqlstr,value,(err)=>{
+  sql(sqlstr,value,(err,data)=>{
     if(err){
       res.send({
         isOk: false
@@ -296,8 +325,6 @@ router.post('/collet', (req,res)=>{
       break;
   }
   sql(sqlstr,value,(err,data)=>{
-    console.log('err',err);
-    console.log('data',data);
     if(err){
       res.send({
         isOk:false

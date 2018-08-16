@@ -2,11 +2,12 @@ const mysql = require('mysql');
 
 module.exports = function (sqlstr,value,callback) {
   const config ={
-      host: 'localhost',
-      user: 'root',
-      password: '',
+      host: 'qdm1300831.my3w.com',
+      user: 'qdm1300831',
+      password: 'dyrcjqlgcj',
       part: '3306',
-      database: 'node'
+      database: 'qdm1300831_db',
+      insecureAuth: true
   };
   let db;
   function handleError (err) {

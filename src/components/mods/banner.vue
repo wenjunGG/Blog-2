@@ -139,9 +139,14 @@ class Banner {
 }
 export default {
   name: 'banner',
+  data () {
+    return {
+      banner: {}
+    }
+  },
   mounted () {
-    let banner = new Banner('banner')
-    banner.start()
+    this.banner = new Banner('banner')
+    this.banner.start()
   }
 }
 </script>

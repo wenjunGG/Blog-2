@@ -4,19 +4,19 @@
       <table class="article-edit">
         <tr>
           <td>标题</td>
-          <td><input type="text" ref="title" v-model="articleData.title"></td>
+          <td><input type="text" ref="title" v-model="itemData.title"></td>
         </tr>
         <tr>
           <td>类别</td>
           <td>
-            <classify ref="classSelect" :firstId="articleData.classify_first_id"
-                      :secondId="articleData.classify_second_id"></classify>
+            <classify ref="classSelect" :firstId="itemData.classify_first_id"
+                      :secondId="itemData.classify_second_id"></classify>
           </td>
         </tr>
         <tr>
           <td>标签</td>
           <td>
-            <select v-model="articleData.label_id">
+            <select v-model="itemData.label_id">
               <option v-for="(item,index) in labels" :value="item.id" :key="index">{{item.name}}</option>
             </select>
           </td>
@@ -25,26 +25,26 @@
           <td>图片</td>
           <td>
             选择已有:
-            <select name="imgsl" ref="imgsl" v-model="articleData.imgurl">
+            <select name="imgsl" ref="imgsl" v-model="itemData.imgurl">
               <option v-for="(item,index) in imgArr" :value="item" :key="index">{{index}}</option>
             </select>
-            <img :src="articleData.imgurl" alt="" width="50" height="30">
+            <img :src="itemData.imgurl" alt="" width="50" height="30">
           </td>
         </tr>
         <tr>
           <td>内容</td>
           <td height="auto">
-            <editor :defaultContent=articleData.content :config=config ref="ue"></editor>
+            <editor :defaultContent=itemData.content :config=config ref="ue"></editor>
           </td>
         </tr>
         <tr>
           <td>演示地址</td>
-          <td><input type="text" v-model="articleData.url"></td>
+          <td><input type="text" v-model="itemData.url"></td>
         </tr>
         <tr>
           <td>状态</td>
           <td>
-            <select v-model="articleData.status_id">
+            <select v-model="itemData.status_id">
               <option v-for="(item,index) in status" :value="item.id" :key="index">{{item.name}}</option>
             </select>
           </td>
@@ -67,28 +67,10 @@ import axios from 'axios'
 import {mapState} from 'vuex'
 import fs from 'fs'
 export default {
+  props: ['itemData'],
   data() {
     return {
-      id: parseInt(this.$route.params.id),
       resultMsg: '',
-      articleData: {
-        id: this.id,
-        classify_first_id: 1,
-        classify_second_id: 0,
-        title: '',
-        label_id: 1,
-        imgurl: '/image/articleLogo/1.jpg',
-        content: '',
-        contentTxt: '',
-        author_id: 0,
-        author_nkname: '',
-        regtime: '',
-        updatetime: '',
-        readcount: 0,
-        favorite: 0,
-        url: '',
-        status_id: 1,
-      },
       imgArr: [],
       config: {
         initialFrameWidth: 850,
@@ -105,23 +87,24 @@ export default {
   },
   methods:{
     submit () {
-      this.articleData.content = this.$refs.ue.getUEContent()
-      this.articleData.contentTxt = this.$refs.ue.getUEContentTxt().slice(0,200)
+      this.itemData.content = this.$refs.ue.getUEContent()
+      this.itemData.contentTxt = this.$refs.ue.getUEContentTxt().slice(0,200)
       let cl = this.$refs.classSelect
-      this.articleData.classify_first_id = cl.firstSelect
-      this.articleData.classify_second_id = cl.secondSelect
+      this.itemData.classify_first_id = cl.firstSelect
+      this.itemData.classify_second_id = cl.secondSelect
       let type
-      if(this.id){
+      if(this.itemData.id){
         type = 'update'
       }else{
         type = 'insert'
       }
       axios.post('/api/articleEdit',{
         type,
-        data: this.articleData
+        data: this.itemData
       }).then((res)=>{
         if(res.data.isOk){
           this.resultMsg = '保存成功'
+          this.$emit('editevent')
         }else{
           this.resultMsg = '保存失败'
         }
@@ -134,20 +117,26 @@ export default {
     editor,
     classify,
   },
-  beforeMount() {
-    if(this.id){
-      axios.get('/api/article', {
-        params: {
-          type: 'id',
-          id: this.id
+  created() {
+    if(!this.itemData){
+      this.itemData = {
+          id: 0,
+          classify_first_id: 1,
+          classify_second_id: 0,
+          title: '',
+          label_id: 1,
+          imgurl: '/image/articleLogo/1.jpg',
+          content: '',
+          contentTxt: '',
+          author_id: 0,
+          author_nkname: '',
+          regtime: '',
+          updatetime: '',
+          readcount: 0,
+          favorite: 0,
+          url: '',
+          status_id: 1,
         }
-      }).then((res) => {
-        if (res.data.isOk) {
-          this.articleData = res.data.result[0]
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
     }
     axios.get('/api/file/articleImg').then((res)=>{
       if(res.data.isOk){
@@ -158,8 +147,8 @@ export default {
     }).catch((err)=>{
       console.log(err)
     })
-    this.articleData.author_id = this.userInfo.id
-    this.articleData.author_nkname = this.userInfo.nickname
+    this.itemData.author_id = this.userInfo.id
+    this.itemData.author_nkname = this.userInfo.nickname
   }
 }
 </script>
