@@ -13,9 +13,9 @@
           </span>
         </div>
         <div class="right" v-show="userInfo.isLogin">
-          <img src="../assets/images/icon/female/6.jpg" />
+          <img src="../../static/icon/default.png" />
           <a href="#">{{userInfo.nickname}}</a>
-          <a href="#">消息(<span>12</span>)</a>
+          <!--<a href="#">消息(<span>12</span>)</a>-->
           <a href="/admin" v-show="userInfo.admin==1">后台管理</a>
         </div>
       </div>
@@ -53,10 +53,10 @@
                   </p>
               </div>
             </li>
-            <li class="music">
-              <span class="note"></span><span class="note"></span>
-              <span class="note"></span><span class="note"></span>
-            </li>
+            <!--<li class="music">-->
+              <!--<span class="note"></span><span class="note"></span>-->
+              <!--<span class="note"></span><span class="note"></span>-->
+            <!--</li>-->
           </ul>
         </div>
       </div>

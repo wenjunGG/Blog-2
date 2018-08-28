@@ -14,7 +14,6 @@
 <script>
 import bgCanvas from '../mods/bgCanvas'
 import axios from 'axios'
-import common from '../mods/common'
 import crypto from 'crypto'
 import handleSession from '../mods/handleSession'
 import {mapMutations} from 'vuex'
@@ -41,7 +40,9 @@ export default {
             let {id, username, admin, nickname} = response.data.userInfo
             handleSession.setSession('user', {id, username, admin, nickname})
             this.updateUser({id, username, admin, nickname})
-            common.turn('#/', 1000)
+            setTimeout(() => {
+              window.history.go(-1)
+            }, 1000)
           } else {
             this.$refs.result.classList.add('red')
             this.$refs.result.innerHTML = response.data.msg

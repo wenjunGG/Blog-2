@@ -5,27 +5,27 @@
         <div class="comment-item">
           <div class="userlogo">
             <img :src="item.userImg" />
-            <p class="username">{{item.author_nkname}}</p>
+            <p class="username">{{item.author_nickname}}</p>
           </div>
           <div class="comment-txt">
             <p class="txt">{{item.content}}</p>
-            <p class="time">{{item.time}}
-              <span @click="item.comShow = !item.comShow">{{item.comShowMsg}}({{item.child.length}})</span>
+            <p class="time">{{gettime(item.time)}}
+              <span @click="item.comShow = !item.comShow" v-show="item.child.length > 0">{{comShowMsg(item)}}({{item.child.length}})</span>
               <span @click="comItem(item, null)">回复</span>
             </p>
           </div>
         </div>
         <ul class="com-list" v-show="item.comShow">
           <li v-for="(itm,idx) in item.child" :key="idx">
-            <p class="uname">{{itm.author_nkname}}<span>回复{{itm.comUser}}</span></p>
-            <p class="ctxt">{{itm.content}}
+            <p class="uname">{{itm.author_nickname}}<span>回复</span>{{itm.comUser}}</p>
+            <p class="ctxt clearfix">{{itm.content}}
               <input type="button" value="回复" @click="comItem(item, itm)">
             </p>
           </li>
-          <li v-show="item.isCom">
-            <p>回复 <span>{{item.isComUser}}</span></p>
+          <li v-show= "item.isCom">
+            <p>回复 <span class="uname">{{item.isComUser}}</span></p>
             <textarea v-model="item.isComTxt"></textarea>
-            <input type="button" value="回复" @click="comment(item)">
+            <input class="fl" type="button" value="发表" @click="comment(item)">
           </li>
         </ul>
       </li>
@@ -35,6 +35,8 @@
 <script>
 import axios from 'axios'
 import {mapState} from 'vuex'
+import common from './common'
+// import Vue from 'vue'
 export default {
   name: 'comment',
   props: ['id'],
@@ -48,31 +50,40 @@ export default {
       'userInfo'
     ])
   },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'articleShow') {
+        this.commetData.splice(0, this.commetData.length)
+        this.id = to.params.artid
+        this.getData()
+      }
+    }
+  },
   methods: {
     getData () {
-      axios.get('/api/comment', {
+      axios.post('/api/comment', {
         type: 'art',
         artId: this.id
       }).then((res) => {
-        if (res.body.isOk) {
-          let data = res.body.result
+        if (res.data.isOk) {
+          let data = res.data.result
           this.commetData = data.filter((item) => {
             return item.pre_com_id === 0
           })
           this.commetData.forEach((item) => {
-            item.isCom = false
-            item.isComid = 0
-            item.isComUser = ''
-            item.comShow = false
-            item.isComTxt = ''
-            item.comShowMsg = item.comShow ? '收起回复' : '回复'
+            this.$set(item, 'isCom', false)
+            this.$set(item, 'isComid', 0)
+            this.$set(item, 'isComUser', '')
+            this.$set(item, 'comShow', false)
+            this.$set(item, 'isComTxt', '')
+            this.$set(item, 'comShowMsg', '查看回复')
             axios.post('/api/user', {
               userId: item.author_id
             }).then((res) => {
-              if (res.body.isOk) {
-                item.userImg = res.data.result[0].photo
+              if (res.data.isOk) {
+                this.$set(item, 'userImg', res.data.result[0].photo)
               } else {
-                item.userImg = '/static/ico/default.png'
+                this.$set(item, 'userImg', '/static/ico/default.png')
               }
             })
             item.child = data.filter((itm) => {
@@ -81,7 +92,7 @@ export default {
             item.child.forEach((it) => {
               it.comUser = data.find((i) => {
                 return it.com_id === i.id
-              }).author_nkname
+              }).author_nickname
             })
           })
         }
@@ -91,12 +102,13 @@ export default {
     },
     comItem (item, itm) {
       item.isCom = true
+      item.comShow = true
       if (itm) {
         item.isComid = itm.id
-        item.isComUser = itm.author_nkname
+        item.isComUser = itm.author_nickname
       } else {
         item.isComid = item.id
-        item.isComUser = item.author_nkname
+        item.isComUser = item.author_nickname
       }
     },
     comment (item) {
@@ -126,7 +138,7 @@ export default {
               content: comData.content,
               art_id: comData.artId,
               author_id: comData.authorId,
-              author_name: comData.authorName,
+              author_nickname: comData.authorName,
               time: new Date().toLocaleString(),
               com_id: comData.comId,
               pre_com_id: comData.preComId,
@@ -142,6 +154,12 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+    },
+    gettime (time) {
+      return common.getTime(time)
+    },
+    comShowMsg (item) {
+      return item.comShow ? '收起回复' : '查看回复'
     }
   },
   created () {

@@ -34,7 +34,6 @@
 </template>
 <script>
 import axios from 'axios'
-import common from '../mods/common'
 import crypto from 'crypto'
 import handleSession from '../mods/handleSession'
 import {mapMutations} from 'vuex'
@@ -169,10 +168,14 @@ export default {
           .then((response) => {
             if (response.data.isOk) {
               this.$refs.result.classList.remove('red')
-              this.$refs.result.innerHTML = '注册成功，请登录。'
-              // handleSession.setSession('user', {username, admin: 0, nickname})
-              // this.updateUser({username, admin: 0, nickname})
-              common.turn('#/login', 1000)
+              this.$refs.result.innerHTML = '注册成功!'
+              let userId = response.data.result.insertId
+              let admin = 0
+              handleSession.setSession('user', {userId, username, admin, nickname})
+              this.updateUser({userId, username, admin, nickname})
+              setTimeout(() => {
+                window.history.go(-1)
+              }, 1000)
             } else {
               this.$refs.result.classList.add('red')
               this.$refs.result.innerHTML = response.data.msg

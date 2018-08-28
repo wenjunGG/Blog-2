@@ -134,7 +134,7 @@ class Banner {
   start () {
     this.init()
     this.regEvent()
-    this.timer = setTimeout(this.rander.bind(this), 2000)
+    this.timer = setTimeout(this.rander.bind(this), 5000)
   }
 }
 export default {

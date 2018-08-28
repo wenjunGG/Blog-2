@@ -159,24 +159,48 @@ router.get('/article',(req,res) =>{
       cid = req.query.cid,
       start = req.query.start,
       count = req.query.count;
-  let sqlstr = 'select * from article_tb';
+  let sqlstr = 'select * from article_tb where status_id = 3';
   let value = [];
+  let fn = () => {
+    if(count) sqlstr += ` limit ${start},${count}`;
+    sql(sqlstr,value,(err,data) => {
+      if(err) throw err;
+      if(data && data.length>0){
+        res.send({
+          isOk:true,
+          result:data
+        })
+      }else{
+        res.send({
+          isOk:false
+        })
+      }
+    })
+  }
   switch (type){
     case 'all':
-      sqlstr += ' order by id desc';
+      sqlstr += ' order by regtime desc';
+      fn();
       break;
     case 'id':
-      sqlstr += ' where id = ?';
+      sqlstr += ' and id = ?';
       value = [req.query.id];
-      break;
-    case 'regtime':
-      sqlstr += ' order by regtime desc';
+      sql('update article_tb set readcount = readcount + 1 where id = ?',value,(err) => {
+        if(err) throw err;
+      })
+      fn();
       break;
     case 'readcount':
-      sqlstr += ' order by rendcount desc';
+      sqlstr += ' order by readcount desc , id desc';
+      fn();
       break;
     case 'favorite':
-      sqlstr += ' order by favorite desc';
+      sqlstr += ' order by favorite desc , id desc';
+      fn();
+      break;
+    case 'search':
+      sqlstr += ` and title like '%${para}%'`;
+      fn();
       break;
     default:
       if(type && para){
@@ -195,7 +219,7 @@ router.get('/article',(req,res) =>{
           if(cid){
             sql('select preid from classify_tb where id = ?',[cid],(err,data)=>{
               if(err) throw err;
-              if(data && data == para){
+              if(data && data[0].preid == para){
                 next(null,2);
               }else{
                 res.status(404).render('404');
@@ -208,25 +232,13 @@ router.get('/article',(req,res) =>{
         function (err,nextdata){
           sqlstr = 'select * from article_tb where ';
           sqlstr += nextdata === 1 ? ('classify_first_id = '+ para) : ('classify_second_id = '+cid);
+          sqlstr += ' order by id desc'
           value = []
+          fn();
         })
       }
       break;
   }
-  if(start) sqlstr += ` limit ${start},${count}`;
-  sql(sqlstr,value,(err,data) => {
-    if(err) throw err;
-    if(data && data.length>0){
-      res.send({
-        isOk:true,
-        result:data
-      })
-    }else{
-      res.send({
-        isOk:false
-      })
-    }
-  })
 });
 
 router.post('/articleEdit',(req,res)=>{
@@ -284,17 +296,17 @@ router.post('/comment',(req,res)=>{
       value = [req.body.artId];
       break;
     case 'insert':
-      sqlstr = `insert into comment_tb (id, content, art_id, author_id, author_nkname, time, com_id, pre_com_id) 
+      sqlstr = `insert into comment_tb (id, content, art_id, author_id, author_nickname, time, com_id, pre_com_id) 
         values (0,?,?,?,?,?,?,?)`;
       let data = req.body.data;
-      value = [data.content,data.artId,data.authorId,data.authorName,new Data().toLocaleString(),data.comId,data.preComId];
+      value = [data.content,data.artId,data.authorId,data.authorName,new Date().toLocaleString(),data.comId,data.preComId]
       break;
     default:
       break;
   }
   sql(sqlstr,value,(err,data)=>{
     if(err) throw err;
-    if(data && (data.length>0 || type === 'insert' || type === 'count')){
+    if(data && ( type === 'insert' || type === 'count' || data.length>0)){
       res.send({
         isOk: true,
         result: data
@@ -333,6 +345,32 @@ router.post('/collet', (req,res)=>{
       res.send({
         isOk:true,
         result:data
+      })
+    }
+  })
+})
+
+router.get('/favorite', (req,res)=>{
+  let sqlstr = 'update article_tb set favorite = '
+  let value = [req.query.id]
+  switch (req.query.type){
+    case 'add':
+      sqlstr += 'favorite + 1 where id = ?';
+      break;
+    case 'minus':
+      sqlstr += 'favorite - 1 where id = ?';
+      break;
+    default:
+      break;
+  }
+  sql(sqlstr,value,(err,data)=>{
+    if(err){
+      res.send({
+        isOk: false
+      })
+    }else{
+      res.send({
+        isOk:true
       })
     }
   })

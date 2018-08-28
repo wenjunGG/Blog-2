@@ -5,7 +5,7 @@ import index from '@/components/index'
 import register from '@/components/user/register'
 import articleList from '@/components/articleList'
 import articleShow from '@/components/articleShow'
-import works from '@/components/works'
+import guestbook from '@/components/guestbook'
 
 Vue.use(Router)
 
@@ -42,9 +42,15 @@ export default new Router({
       component: articleShow
     },
     {
-      path: '/works/:preid/:secid.html',
-      name: 'works',
-      component: works
+      path: '/guestbook',
+      name: 'guestbook',
+      component: guestbook
     }
-  ]
+  ],
+  scrollBehavior () {
+    return {
+      x: 0,
+      y: 0
+    }
+  }
 })

@@ -41,7 +41,7 @@ export default {
     this.setStatus()
     this.setLabels()
   },
-  mounted () {
+  beforeCreate () {
     let ev = 'orientationchange' in window ? 'orientationchange' : 'resize'
     let windowW = 0
     let addEvent = common.addEvent()

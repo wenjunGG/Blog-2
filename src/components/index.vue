@@ -5,12 +5,15 @@
       <div class="blog-about">
         <article class="search">
           <h1>搜索本站</h1>
-          <p><input type="text"><i class="iconfont">&#xe6a8;</i></p>
+          <p>
+            <input type="text" v-model="searchTxt"><router-link :to="`/articlelist/search?para=${searchTxt}`"><i class="iconfont">&#xe6a8;</i></router-link>
+          </p>
         </article>
         <article class="about">
           <h1>关于博客</h1>
-          <p>lolowu：名字取自陋室铭，愿本站能成为一个前端学习者交流学习的园地，达到“山不在高，有仙则名”的境界。</p>
-          <p>本站前端页面主要采用原生JS、JQ结合css完成布局和特效，采用vue.js做数据处理，后台用node.js搭建，数据库为SQLserver，源码地址：<a href="https://github.com/xiuyer/lolowu.git">https://github.com/xiuyer/lolowu.git</a></p>
+          <p>lolowu：名字取自陋室铭，愿本站能成为一个前端学习者交流学习的园地，以期“山不在高，有仙则名”。</p>
+          <p>本站采用Vue.js+Node.js+Mysql搭建，前后端分离，欢迎感兴趣的朋友交流学习。</p>
+          <p>源码地址：<a href="https://github.com/xiuyer/Blog.git" target="_blank">https://github.com/xiuyer/Blog.git</a></p>
         </article>
       </div>
     </section>
@@ -26,6 +29,11 @@ import listCom from './mods/listComponent'
 import column from './mods/column'
 export default {
   name: 'index',
+  data () {
+    return {
+      searchTxt: ''
+    }
+  },
   components: {
     banner,
     listCom,

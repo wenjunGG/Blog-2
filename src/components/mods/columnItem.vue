@@ -21,9 +21,11 @@ export default {
   },
   created () {
     axios.get('/api/article', {
-      type: this.type,
-      start: 0,
-      count: 10
+      params: {
+        type: this.type,
+        start: 0,
+        count: 10
+      }
     }).then((res) => {
       if (res.data.isOk) {
         this.articleData = res.data.result

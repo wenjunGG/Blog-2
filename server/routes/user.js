@@ -20,9 +20,13 @@ router.post('/register', (req, res, next) =>{
     if(err) throw err;
     if(data && data.length===0){
       time = new Date().toLocaleString();
-      sql('INSERT INTO `usertb` (`id`, `username`, `password`, `admin`, `photo`, `nickname`, `sex`, `regtime`, `activeness`) VALUES (NULL, ?, ?, 0, 0, ?, 0, ?, 0)',[user,pass,nickname,time],(er,dt)=>{
+      sql('INSERT INTO `usertb` (`id`, `username`, `password`, `admin`, `photo`, `nickname`, `sex`, `regtime`, `activeness`) VALUES (0, ?, ?, 0, ?, ?, 0, ?, 0)',[user,pass,'/static/icon/default.png',nickname,time],(er,dt)=>{
         if(er){
-          res.send({msg:'服务器被外星人偷走了....请稍后再试',isOk:false});
+          res.send({
+            msg:'服务器被外星人偷走了....请稍后再试',
+            isOk:false,
+            result: data
+          });
           return;
         }
         res.send({msg:'注册成功!',isOk:true});

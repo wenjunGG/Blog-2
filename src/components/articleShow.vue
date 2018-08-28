@@ -9,6 +9,7 @@
           <span>{{colletMsg}}</span>
         </div>
         <div class="info">
+          <i class="iconfont" @click="favo">{{isFavo?'&#xe656;':'&#xe64a;'}}</i>
           <span>{{getTime(artData.regtime)}}</span> 阅读( <span>{{artData.readcount}}</span>) 评论( <span>{{commentCount}}</span>)
         </div>
         <div class="enter">
@@ -27,6 +28,7 @@ import axios from 'axios'
 import {mapState} from 'vuex'
 import column from './mods/column'
 import common from './mods/common'
+import comment from './mods/comment'
 export default {
   name: 'articleShow',
   data () {
@@ -36,11 +38,13 @@ export default {
       isOn: false,
       colletMsg: '点击收藏',
       comTxt: '',
-      commentCount: 0
+      commentCount: 0,
+      isFavo: false
     }
   },
   components: {
-    column
+    column,
+    comment
   },
   computed: {
     ...mapState([
@@ -89,6 +93,10 @@ export default {
       }
     },
     commentFn () {
+      if (!this.userInfo.isLogin) {
+        alert('请先登录!')
+        return
+      }
       let comData = {
         content: this.comTxt,
         artId: this.id,
@@ -122,17 +130,17 @@ export default {
       }).then((res) => {
         if (res.data.isOk) {
           this.artData = res.data.result[0]
-          setTimeout(this.uparse, 200)
+          setTimeout(this.uparse, 100)
         }
       }).catch((err) => {
         console.log(err)
       })
-      axios.get('/api/comment', {
+      axios.post('/api/comment', {
         type: 'count',
         id: this.id
       }).then((res) => {
         if (res.data.isOk) {
-          this.commentCount = res.data.result
+          this.commentCount = res.data.result[0]['count(*)']
         }
       }).catch((err) => {
         console.log(err)
@@ -156,12 +164,25 @@ export default {
       window.uParse('#contentTxt', {
         rootPath: '../../static/ueditor'
       })
+    },
+    favo () {
+      this.isFavo = !this.isFavo
+      let type = this.isFavo ? 'add' : 'minus'
+      axios.get('/api/favorite', {
+        params: {
+          type,
+          id: this.id
+        }
+      }).then().catch((err) => {
+        console.log(err)
+      })
     }
   },
   watch: {
     '$route' (to, from) {
       if (to.name === 'articleShow') {
         this.id = to.params.artid
+        this.isFavo = false
         this.initData()
       }
     }
