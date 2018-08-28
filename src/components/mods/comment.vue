@@ -39,7 +39,7 @@ import common from './common'
 // import Vue from 'vue'
 export default {
   name: 'comment',
-  props: ['id'],
+  props: ['id', 'type'],
   data () {
     return {
       commetData: []
@@ -62,7 +62,7 @@ export default {
   methods: {
     getData () {
       axios.post('/api/comment', {
-        type: 'art',
+        type: this.type,
         artId: this.id
       }).then((res) => {
         if (res.data.isOk) {

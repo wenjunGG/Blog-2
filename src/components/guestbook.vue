@@ -7,19 +7,56 @@
         <input type="button" value="发表评论" @click="commentFn">
       </div>
     </div>
-    <comment type="guestbook" :id="id" ref="comment"></comment>
+    <comment type="guestbook" id="0"></comment>
     <column></column>
   </section>
 </template>
 <script>
 import comment from './mods/comment'
+import {mapState} from 'vuex'
+import axios from 'axios'
 export default {
   name: 'guestbook',
   data () {
-    return {}
+    return {
+      comTxt: ''
+    }
   },
   components: {
     comment
+  },
+  computed: {
+    ...mapState([
+      'userInfo'
+    ])
+  },
+  methods: {
+    commentFn () {
+      if (!this.userInfo.isLogin) {
+        alert('请先登录!')
+        return
+      }
+      let comData = {
+        content: this.comTxt,
+        artId: 0,
+        authorId: this.userInfo.id,
+        authorName: this.userInfo.nickname,
+        comId: 0,
+        preComId: 0
+      }
+      axios.post('/api/comment', {
+        type: 'insert',
+        data: comData
+      }).then((res) => {
+        if (res.data.isOk) {
+          this.$refs.comment.getData()
+        } else {
+          alert('你的回复被外星人劫走了，请稍后再试。')
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
   }
 }
 </script>

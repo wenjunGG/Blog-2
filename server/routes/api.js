@@ -301,6 +301,9 @@ router.post('/comment',(req,res)=>{
       let data = req.body.data;
       value = [data.content,data.artId,data.authorId,data.authorName,new Date().toLocaleString(),data.comId,data.preComId]
       break;
+    case 'guestbook':
+      sqlstr = 'select * from comment_tb where art_id = 0';
+      break;
     default:
       break;
   }

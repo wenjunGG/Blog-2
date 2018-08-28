@@ -24,14 +24,13 @@ export default {
     this.editor = window.UE.getEditor('editor', this.config) // 初始化UE
     this.editor.addListener('ready', function () {
       _this.editor.setContent(_this.defaultContent) // 确保UE加载完成后，放入内容。
-      console.log('defaultcontent', _this.defaultContent)
     })
   },
   methods: {
     getUEContent () { // 获取内容方法
       return this.editor.getContent()
     },
-    getUEContentTxt () {
+    getUEContentTxt () { // 获取纯文本方法
       return this.editor.getContentTxt()
     }
   },
