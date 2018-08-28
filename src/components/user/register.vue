@@ -170,10 +170,12 @@ export default {
               this.$refs.result.classList.remove('red')
               this.$refs.result.innerHTML = '注册成功!'
               let userId = response.data.result.insertId
+              console.log('userId', userId)
               let admin = 0
               handleSession.setSession('user', {userId, username, admin, nickname})
               this.updateUser({userId, username, admin, nickname})
               setTimeout(() => {
+                console.log(window.history)
                 window.history.go(-1)
               }, 1000)
             } else {

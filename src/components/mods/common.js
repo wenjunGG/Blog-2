@@ -14,6 +14,6 @@ export default {
   },
   getTime (time) {
     let newtime = new Date(time)
-    return `${newtime.getFullYear()}-${newtime.getMonth() + 1}-${newtime.getDate()} ${newtime.getHours()}:${newtime.getMinutes()}:${newtime.getSeconds()}`
+    return `${newtime.getFullYear() || 0}-${newtime.getMonth() + 1 || 0}-${newtime.getDate() || 0} ${newtime.getHours() || 0}:${newtime.getMinutes() || 0}:${newtime.getSeconds() || 0}`
   }
 }

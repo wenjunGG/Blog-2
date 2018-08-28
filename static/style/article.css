@@ -230,3 +230,30 @@
   font-size: .16rem;
   line-height: .4rem;
 }
+.content .main .guestbook h2{
+  margin-bottom: .15rem;
+  font-size: .18rem;
+  color:#61b3e6;
+  border-bottom:2px solid #61b3e6 ;
+}
+.content .main .guestbook textarea {
+  display: block;
+  margin: auto;
+  width: 8rem;
+  height: 1.3rem;
+  resize: none;
+  border: 1px solid #61b3e6;
+  border-radius:.1rem ;
+}
+.content .main .guestbook input {
+  display: block;
+  margin: .1rem;
+  float: right;
+  width: .6rem;
+  height: .3rem;
+  line-height: .3rem;
+  background-color: #61b3e6;
+  color:#fff;
+  letter-spacing: .1rem;
+  text-align: center;
+}

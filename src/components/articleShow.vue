@@ -130,7 +130,7 @@ export default {
       }).then((res) => {
         if (res.data.isOk) {
           this.artData = res.data.result[0]
-          setTimeout(this.uparse, 100)
+          setTimeout(this.uparse, 300)
         }
       }).catch((err) => {
         console.log(err)

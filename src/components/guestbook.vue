@@ -1,13 +1,13 @@
 <template>
   <section class="content container mt110 mb20">
-    <div class="main artshow mb20">
-      <div class="enter">
-        <h2>评论</h2>
+    <div class="main mb20">
+      <div class="guestbook clearfix">
+        <h2>给我留言</h2>
         <textarea name="" id="" cols="80" rows="8" v-model="comTxt"></textarea>
-        <input type="button" value="发表评论" @click="commentFn">
+        <input type="button" value="发布" @click="commentFn">
       </div>
+      <comment type="guestbook" id="0" ref="comment"></comment>
     </div>
-    <comment type="guestbook" id="0"></comment>
     <column></column>
   </section>
 </template>
@@ -15,6 +15,7 @@
 import comment from './mods/comment'
 import {mapState} from 'vuex'
 import axios from 'axios'
+import column from './mods/column'
 export default {
   name: 'guestbook',
   data () {
@@ -23,7 +24,8 @@ export default {
     }
   },
   components: {
-    comment
+    comment,
+    column
   },
   computed: {
     ...mapState([
