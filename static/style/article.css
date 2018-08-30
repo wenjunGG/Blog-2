@@ -86,13 +86,14 @@
     float: right;
     width: 7rem;
     min-height: 1rem;
-    font-size:.16rem;
+    font-size:.14rem;
+    line-height: .25rem;
 }
 .main .comment .comment-item .comment-txt .time{
     position: absolute;
     right: 0;
     bottom: 0;
-    font-size: .14rem;
+    font-size: .12rem;
     text-align: right;
 }
 .main .comment .comment-item .comment-txt .time span{
@@ -238,12 +239,14 @@
 }
 .content .main .guestbook textarea {
   display: block;
+  padding: .05rem;
   margin: auto;
   width: 8rem;
   height: 1.3rem;
   resize: none;
   border: 1px solid #61b3e6;
   border-radius:.1rem ;
+  outline: none;
 }
 .content .main .guestbook input {
   display: block;
@@ -254,6 +257,8 @@
   line-height: .3rem;
   background-color: #61b3e6;
   color:#fff;
-  letter-spacing: .1rem;
   text-align: center;
+  border: none;
+  border-radius:.05rem;
+  cursor: pointer;
 }

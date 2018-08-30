@@ -52,6 +52,7 @@ export default {
       }).then((res) => {
         if (res.data.isOk) {
           this.$refs.comment.getData()
+          this.comTxt = ''
         } else {
           alert('你的回复被外星人劫走了，请稍后再试。')
         }

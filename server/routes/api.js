@@ -379,6 +379,22 @@ router.get('/favorite', (req,res)=>{
   })
 })
 
+router.get('/about', (req,res)=>{
+  sql('select * from about_tb',[],(err,data)=>{
+    if(err) throw err;
+    if(data && data.length > 0) {
+      res.send({
+        isOk: true,
+        result: data[0]
+      })
+    } else {
+      res.send({
+        isOk: false
+      })
+    }
+  })
+})
+
 router.use('/file',require('./file.js'))
 
 module.exports = router;

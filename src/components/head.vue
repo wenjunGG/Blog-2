@@ -41,7 +41,7 @@
         </div>
         <div class="right">
           <ul>
-            <li v-for="(item,index) in classData" :key="index" @click="acitve(index)" ref="navLi">
+            <li v-for="(item,index) in classData" :key="index" @click="acitve(index)" ref="aLi">
               <router-link :to="`${item.url}?para=${item.id}`">
                 <span>{{item.name}}</span>
                 <span>{{item.name}}</span>
@@ -100,8 +100,9 @@ export default {
       handleSession.removeSession('user')
     },
     acitve (index) {
-      this.$refs.navLi[index].classList.add('on')
-      this.$refs.navLi[this.lastLi].classList.remove('on')
+      if (index === this.lastLi) return
+      this.$refs.aLi[index].classList.add('on')
+      this.$refs.aLi[this.lastLi].classList.remove('on')
       this.lastLi = index
     },
     ...mapMutations([
@@ -114,6 +115,9 @@ export default {
     if (uInfo) {
       this.updateUser(uInfo)
     }
+  },
+  mounted () {
+    this.acitve(0)
   }
 }
 </script>

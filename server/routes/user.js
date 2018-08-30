@@ -24,12 +24,15 @@ router.post('/register', (req, res, next) =>{
         if(er){
           res.send({
             msg:'服务器被外星人偷走了....请稍后再试',
-            isOk:false,
-            result: data
+            isOk:false
           });
           return;
         }
-        res.send({msg:'注册成功!',isOk:true});
+        res.send({
+          msg:'注册成功!',
+          isOk:true,
+          result: dt
+        });
       })
     }else{
       res.send({msg:'用户名已经存在',isOk:false});

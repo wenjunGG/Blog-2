@@ -5,7 +5,6 @@ const express = require('express'),
 router.get('/articleImg',(req,res) => {
   fs.readdir('../../dist/image/articleLogo',(err,files)=>{
     if(err) throw err;
-    console.log(files);
     if(files && files.length>0){
       res.send({
         isOk: true,

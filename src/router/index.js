@@ -6,6 +6,7 @@ import register from '@/components/user/register'
 import articleList from '@/components/articleList'
 import articleShow from '@/components/articleShow'
 import guestbook from '@/components/guestbook'
+import about from '@/components/about'
 
 Vue.use(Router)
 
@@ -45,6 +46,11 @@ export default new Router({
       path: '/guestbook',
       name: 'guestbook',
       component: guestbook
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: about
     }
   ],
   scrollBehavior () {

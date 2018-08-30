@@ -190,27 +190,19 @@ export default {
     this.getData()
   },
   mounted () {
-    console.log('mounted')
     let _this = this
-    console.log(window)
     window.onscroll = function () {
       if (_this.isDone || _this.isGetData) return
-      console.log('滚动')
       clearTimeout(_this.timer)
       let cNode = _this.$refs.wait
       let pNode = cNode.parentNode
       let testTop = cNode.offsetTop
       while (pNode !== document && pNode) {
-        console.log('pNode', pNode)
         testTop += pNode.offsetTop
         pNode = pNode.parentNode
       }
-      console.log('wait', _this.$refs.wait)
-      console.log('testTop', testTop)
       let currentBottom = (document.documentElement.scrollTop || document.body.scrollTop) + window.innerHeight
-      console.log('currentBottom', currentBottom)
       if (testTop - currentBottom < 160) {
-        console.log('小于50啦')
         _this.waitShow = true
         _this.isGetData = true
         _this.timer = setTimeout(_this.getData.bind(_this), 1000)

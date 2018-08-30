@@ -3,10 +3,10 @@
     <bgCanvas></bgCanvas>
     <div class="login">
       <h1>Welcome</h1>
-      <p> <span>账户</span><input ref="username" type="text"></p>
-      <p> <span>密码</span><input ref="password" type="password"></p>
+      <p> <span>账户</span><input type="text" v-model="name"></p>
+      <p> <span>密码</span><input type="password" v-model="pass"></p>
       <p><input type="button" class="submit" value="登录" @click="submit"></p>
-      <div class="result" ref="result"></div>
+      <div class="result" :class="resClass" v-html="resHtml"></div>
       <div class="link"><a href="#/register">注册</a><a href="#/">首页</a></div>
     </div>
   </div>
@@ -19,6 +19,14 @@ import handleSession from '../mods/handleSession'
 import {mapMutations} from 'vuex'
 export default {
   name: 'login',
+  data () {
+    return {
+      name: '',
+      pass: '',
+      resClass: '',
+      resHtml: ''
+    }
+  },
   components: {
     bgCanvas
   },
@@ -27,16 +35,16 @@ export default {
       'updateUser'
     ]),
     submit () {
-      this.$refs.result.innerHTML = '请稍后...'
+      this.resHtml = '请稍后...'
       let md5 = crypto.createHash('md5')
       axios.post('/user/login', {
-        name: this.$refs.username.value,
-        password: md5.update(this.$refs.password.value).digest('hex')
+        name: this.name,
+        password: md5.update(this.pass).digest('hex')
       })
         .then((response) => {
           if (response.data.isOk) {
-            this.$refs.result.classList.remove('red')
-            this.$refs.result.innerHTML = response.data.msg
+            this.resClass = ''
+            this.resHtml = response.data.msg
             let {id, username, admin, nickname} = response.data.userInfo
             handleSession.setSession('user', {id, username, admin, nickname})
             this.updateUser({id, username, admin, nickname})
@@ -44,8 +52,8 @@ export default {
               window.history.go(-1)
             }, 1000)
           } else {
-            this.$refs.result.classList.add('red')
-            this.$refs.result.innerHTML = response.data.msg
+            this.resClass = 'red'
+            this.resHtml = response.data.msg
           }
         })
         .catch((err) => {

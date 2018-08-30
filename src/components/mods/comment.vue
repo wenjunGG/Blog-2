@@ -144,6 +144,7 @@ export default {
               pre_com_id: comData.preComId,
               comUser: item.isComUser
             })
+            item.isComTxt = ''
           } else {
             this.getData()
           }

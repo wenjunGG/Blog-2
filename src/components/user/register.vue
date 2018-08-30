@@ -9,26 +9,26 @@
       </header>
       <div>
         <span><i class="iconfont">&#xe602;</i></span>
-        <input ref="iptname" type="text" placeholder="输入您的用户名" @focus="focus('name')" @blur="blur('name')">
-        <div ref="name"></div>
+        <input type="text" placeholder="输入您的用户名" v-model="value.name" @focus="focus('name')" @blur="blur('name')">
+        <div :class="classname.name" v-html="html.name"></div>
       </div>
       <div>
         <span><i class="iconfont">&#xe655;</i></span>
-        <input ref="iptnickname" type="text" placeholder="输入您的昵称" @focus="focus('nickname')" @blur="blur('nickname')">
-        <div ref="nickname"></div>
+        <input type="text" placeholder="输入您的昵称" v-model="value.nickname" @focus="focus('nickname')" @blur="blur('nickname')">
+        <div :class="classname.nickname" v-html="html.nickname"></div>
       </div>
       <div>
         <span><i class="iconfont">&#xe603;</i></span>
-        <input ref="iptpass1" type="password" placeholder="输入您的密码" @focus="focus('pass1')" @blur="blur('pass1')">
-        <div ref="pass1"></div>
+        <input type="password" placeholder="输入您的密码" v-model="value.pass1" @focus="focus('pass1')" @blur="blur('pass1')">
+        <div :class="classname.pass1" v-html="html.pass1"></div>
       </div>
       <div>
         <span><i class="iconfont">&#xe603;</i></span>
-        <input ref="iptpass2" type="password" placeholder="再次输入您的密码" @focus="focus('pass2')" @blur="blurP2()">
-        <div ref="pass2"></div>
+        <input type="password" placeholder="再次输入您的密码" v-model="value.pass2" @focus="focus('pass2')" @blur="blurP2()">
+        <div :class="classname.pass2" v-html="html.pass2"></div>
       </div>
       <p><input type="button" class="submit" value="注册" @click="submit()"></p>
-      <div class="result" ref="result"></div>
+      <div class="result" :class="classname.result" v-html="html.result"></div>
     </div>
   </div>
 </template>
@@ -70,6 +70,26 @@ export default {
         pass1: false,
         pass2: false,
         nickname: false
+      },
+      value: {
+        name: '',
+        pass1: '',
+        pass2: '',
+        nickname: ''
+      },
+      classname: {
+        name: '',
+        pass1: '',
+        pass2: '',
+        nickname: '',
+        result: ''
+      },
+      html: {
+        name: '',
+        pass1: '',
+        pass2: '',
+        nickname: '',
+        result: ''
       }
     }
   },
@@ -78,19 +98,19 @@ export default {
       'updateUser'
     ]),
     focus (str) {
-      this.$refs[str].className = 'tips'
-      this.$refs[str].innerHTML = this.tips[str]
+      this.classname[str] = 'tips'
+      this.html[str] = this.tips[str]
     },
     blur (str) {
       this.isRight[str] = false
-      this.$refs[str].className = ''
-      this.$refs[str].innerHTML = ''
-      let val = this.$refs['ipt' + str].value
+      this.classname[str] = ''
+      this.html[str] = ''
+      let val = this.value[str]
       if (val) {
         if (this.regx[str].test(val)) {
           if (str === 'name') {
-            this.$refs[str].className = 'error'
-            this.$refs[str].innerHTML = '验证中...'
+            this.classname[str] = 'error'
+            this.html[str] = '验证中...'
             axios.get('/user/username', {
               params: {
                 user: val
@@ -98,12 +118,12 @@ export default {
             })
               .then((response) => {
                 if (response.data) {
-                  this.$refs[str].className = 'right'
-                  this.$refs[str].innerHTML = this.right
+                  this.classname[str] = 'right'
+                  this.html[str] = this.right
                   this.isRight[str] = true
                 } else {
-                  this.$refs[str].className = 'error'
-                  this.$refs[str].innerHTML = '该用户名已被使用'
+                  this.classname[str] = 'error'
+                  this.html[str] = '该用户名已被使用'
                   this.isRight[str] = false
                 }
               })
@@ -112,16 +132,15 @@ export default {
               })
             return
           }
-          this.$refs[str].className = 'right'
-          this.$refs[str].innerHTML = this.right
+          this.classname[str] = 'right'
+          this.html[str] = this.right
           this.isRight[str] = true
         } else {
-          this.$refs[str].className = 'error'
-          this.$refs[str].innerHTML = this.error[str]
+          this.classname[str] = 'error'
+          this.html[str] = this.error[str]
         }
         if (str === 'pass1') {
-          let val2 = this.$refs.iptpass2
-          if (val2) {
+          if (this.value.pass2) {
             this.blurP2()
           }
         }
@@ -129,23 +148,23 @@ export default {
     },
     blurP2 () {
       this.isRight.pass2 = false
-      this.$refs.pass2.className = ''
-      this.$refs.pass2.innerHTML = ''
-      let val1 = this.$refs.iptpass1.value
-      let val2 = this.$refs.iptpass2.value
+      this.classname.pass2 = ''
+      this.html.pass2 = ''
+      let val1 = this.value.pass1
+      let val2 = this.value.pass2
       if (val1 && val2) {
         if (val1 === val2) {
-          this.$refs.pass2.className = 'right'
-          this.$refs.pass2.innerHTML = this.right
+          this.classname.pass2 = 'right'
+          this.html.pass2 = this.right
           this.isRight.pass2 = true
         } else {
-          this.$refs.pass2.className = 'error'
-          this.$refs.pass2.innerHTML = this.error.pass2
+          this.classname.pass2 = 'error'
+          this.html.pass2 = this.error.pass2
         }
       }
     },
     submit () {
-      this.$refs.result.innerHTML = '请稍后...'
+      this.html.result = '请稍后...'
       let flag = true
       for (let item in this.isRight) {
         if (this.isRight.hasOwnProperty(item)) {
@@ -157,39 +176,47 @@ export default {
       }
       if (flag) {
         let md5 = crypto.createHash('md5')
-        let newpass = md5.update(this.$refs.iptpass1.value).digest('hex')
-        let username = this.$refs.iptname.value
-        let nickname = this.$refs.iptnickname.value
+        let newpass = md5.update(this.value.pass1).digest('hex')
+        let username = this.value.name
+        let nickname = this.value.nickname
         axios.post('/user/register', {
           name: username,
-          nickname: nickname,
+          nickname,
           password: newpass
         })
           .then((response) => {
             if (response.data.isOk) {
-              this.$refs.result.classList.remove('red')
-              this.$refs.result.innerHTML = '注册成功!'
+              // this.$refs.result.classList.remove('red')
+              this.classname.result = ''
+              this.html.result = '注册成功!'
               let userId = response.data.result.insertId
-              console.log('userId', userId)
               let admin = 0
-              handleSession.setSession('user', {userId, username, admin, nickname})
-              this.updateUser({userId, username, admin, nickname})
+              handleSession.setSession('user', {id: userId, username, admin, nickname})
+              this.updateUser({id: userId, username, admin, nickname})
+              this.clear()
               setTimeout(() => {
-                console.log(window.history)
                 window.history.go(-1)
               }, 1000)
             } else {
-              this.$refs.result.classList.add('red')
-              this.$refs.result.innerHTML = response.data.msg
+              // this.$refs.result.classList.add('red')
+              this.classname.result = 'red'
+              this.html.result = response.data.msg
             }
           })
           .catch((error) => {
             console.log(error)
           })
       } else {
-        this.$refs.result.classList.add('red')
-        this.$refs.result.innerHTML = '请检查输入'
+        // this.$refs.result.classList.add('red')
+        this.classname.result = 'red'
+        this.html.result = '请检查输入'
       }
+    },
+    clear () {
+      this.value.name = ''
+      this.value.nickname = ''
+      this.value.pass1 = ''
+      this.value.pass2 = ''
     }
   },
   created () {
